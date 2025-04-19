@@ -1,31 +1,48 @@
-
 import streamlit as st
 from PIL import Image
 
-# Cargar el logotipo
+# Configuración de la página
+st.set_page_config(page_title="Calculadora de Dosis Médicas", layout="wide")
+
+# Ocultar el menú y footer de Streamlit
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# Cargar logotipo
 logo = Image.open("logo_calculadora_dosis.png")
-st.image(logo, width=200)
 
-st.title("Calculadora de Dosis Médica")
+# Layout de bienvenida con columnas
+col1, col2 = st.columns([1, 3])
+with col1:
+    st.image(logo, width=150)
+with col2:
+    st.title("Calculadora de Dosis Médicas")
+    st.markdown("""
+    Bienvenido a la **Calculadora de Dosis Médicas**, una herramienta sencilla y precisa para el cálculo de dosis en función del peso corporal del paciente y la dosis por kilogramo.
 
-st.markdown(
-    "Esta aplicación permite calcular la dosis de un medicamento basada en el peso del paciente, "
-    "la dosis requerida por kg y la concentración del medicamento."
-)
+    Desarrollado por **Judá** como parte de un proyecto educativo y de impacto social.
+    """)
 
-# Entradas del usuario
-peso = st.number_input("Peso del paciente (kg)", min_value=0.0, step=0.1)
-dosis_kg = st.number_input("Dosis requerida por kg (mg/kg)", min_value=0.0, step=0.1)
-concentracion = st.number_input("Concentración del medicamento (mg/mL)", min_value=0.0, step=0.1)
+# Botón para acceder a la calculadora
+st.markdown("---")
+if st.button("Ingresar a la calculadora"):
+    st.session_state["mostrar_calculadora"] = True
 
-# Cálculo
-if st.button("Calcular dosis"):
-    if peso > 0 and dosis_kg > 0 and concentracion > 0:
-        dosis_total_mg = peso * dosis_kg
-        volumen_ml = dosis_total_mg / concentracion
+# Lógica de la calculadora
+if "mostrar_calculadora" in st.session_state and st.session_state["mostrar_calculadora"]:
+    st.header("Calculadora de Dosis")
 
-        st.success(f"Dosis total: {dosis_total_mg:.2f} mg")
-        st.success(f"Volumen a administrar: {volumen_ml:.2f} mL")
+    peso = st.number_input("Peso del paciente (kg):", min_value=0.0, format="%.2f")
+    dosis_kg = st.number_input("Dosis por kg (mg/kg):", min_value=0.0, format="%.2f")
+
+    if st.button("Calcular dosis total"):
+        dosis_total = peso * dosis_kg
+        st.success(f"Dosis total: **{dosis_total:.2f} mg**")
     else:
         st.warning("Por favor, introduce valores válidos en todos los campos.")
 
