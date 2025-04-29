@@ -53,16 +53,28 @@ unidad_peso = st.radio("Unidad del peso ingresado:", ("Kilogramos (kg)", "Libras
 # Entrada de peso
 peso_ingresado = st.number_input("Peso del paciente", min_value=0.0, step=0.1, format="%.2f")
 
-# Conversión automática si elige libras
+# Conversión automática si seleccionan libras
 if unidad_peso == "Libras (lb)":
     peso = peso_ingresado * 0.453592
     st.write(f"Peso convertido a kg: {peso:.2f} kg")
 else:
     peso = peso_ingresado
 
-# Otras entradas
+# Entrada de dosis requerida
 dosis_requerida = st.number_input("Dosis requerida por kg (mg/kg)", min_value=0.0, step=0.1, format="%.2f")
-concentracion = st.number_input("Concentración del medicamento (mg/mL)", min_value=0.0, step=0.1, format="%.2f")
+
+# Selector de unidad de concentración
+unidad_concentracion = st.radio("Unidad de la concentración del medicamento:", ("mg/mL", "μg/mL"))
+
+# Entrada de concentración
+concentracion_ingresada = st.number_input("Concentración del medicamento", min_value=0.0, step=0.1, format="%.2f")
+
+# Conversión automática si seleccionan μg/mL
+if unidad_concentracion == "μg/mL":
+    concentracion = concentracion_ingresada / 1000
+    st.write(f"Concentración convertida a mg/mL: {concentracion:.4f} mg/mL")
+else:
+    concentracion = concentracion_ingresada
 
 # Botón para calcular
 if st.button("Calcular dosis"):
@@ -83,9 +95,9 @@ if st.button("Calcular dosis"):
         st.success("Cálculo realizado exitosamente:")
         st.write(f"**Peso utilizado (en kg):** {peso:.2f}")
         st.write(f"**Dosis requerida:** {dosis_requerida:.2f} mg/kg")
-        st.write(f"**Concentración:** {concentracion:.2f} mg/mL")
+        st.write(f"**Concentración utilizada:** {concentracion:.4f} mg/mL")
         st.write("---")
-        st.write(f"**Fórmula aplicada:** ({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.2f}")
+        st.write(f"**Fórmula aplicada:** ({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.4f}")
         st.write(f"**Resultado final:** {volumen_a_administrar_ml:.2f} mL")
 
 st.markdown("---")
