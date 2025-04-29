@@ -64,9 +64,51 @@ st.markdown("---")
 
 # --- Expander para mostrar la calculadora ---
 with st.expander("Abrir Calculadora de Dosis", expanded=False):
-
+# Selector de modo
+modo = st.radio("Selecciona el modo de cálculo:", 
+            if modo == "Calcular dosis a administrar":
+     
+                ("Calcular dosis a administrar", "Calcular dosis recibida"))
     st.header("Calculadora de Dosis")
+elif modo == "Calcular dosis recibida":
+    # Paso 1: Peso
+    unidad_peso = st.radio("Unidad del peso ingresado:", ("Kilogramos (kg)", "Libras (lb)"))
+    peso_ingresado = st.number_input("Peso del paciente", min_value=0.0, step=0.1, format="%.2f", key="peso_inverso")
+    if unidad_peso == "Libras (lb)":
+        peso = peso_ingresado * 0.453592
+        st.write(f"Peso convertido a kg: {peso:.2f} kg")
+    else:
+        peso = peso_ingresado
 
+    # Paso 2: Concentración
+    unidad_concentracion = st.radio("Unidad de la concentración del medicamento:", ("mg/mL", "μg/mL"), key="unidad_inv")
+    concentracion_ingresada = st.number_input("Concentración del medicamento", min_value=0.0, step=0.1, format="%.2f", key="conc_inv")
+    if unidad_concentracion == "μg/mL":
+        concentracion = concentracion_ingresada / 1000
+        st.write(f"Concentración convertida a mg/mL: {concentracion:.4f} mg/mL")
+    else:
+        concentracion = concentracion_ingresada
+
+    # Paso 3: Volumen administrado
+    volumen_admin = st.number_input("Volumen administrado (mL)", min_value=0.0, step=0.1, format="%.2f")
+
+    if st.button("Calcular dosis recibida"):
+        if peso <= 0:
+            st.error("Error: El peso debe ser mayor que 0.")
+        elif concentracion <= 0:
+            st.error("Error: La concentración debe ser mayor que 0.")
+        elif volumen_admin <= 0:
+            st.error("Error: El volumen debe ser mayor que 0.")
+        else:
+            # Cálculos
+            dosis_total_mg = volumen_admin * concentracion
+            dosis_por_kg = dosis_total_mg / peso
+
+            st.success("Resultado del cálculo inverso:")
+            st.write(f"**Dosis total administrada:** {dosis_total_mg:.2f} mg")
+            st.write(f"**Dosis por kg:** {dosis_por_kg:.2f} mg/kg")
+            st.write("---")
+            st.write(f"**Fórmula aplicada:** ({volumen_admin:.2f} × {concentracion:.2f}) ÷ {peso:.2f}")
     # Paso 1: Unidad de peso
     unidad_peso = st.radio("Unidad del peso ingresado:", ("Kilogramos (kg)", "Libras (lb)"))
     peso_ingresado = st.number_input("Peso del paciente", min_value=0.0, step=0.1, format="%.2f")
