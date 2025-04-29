@@ -134,6 +134,37 @@ with st.expander("Abrir Calculadora de Dosis", expanded=False):
             st.write(f"**Fórmula aplicada:** ({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.4f}")
             st.write(f"**Resultado final:** {volumen_a_administrar_ml:.2f} mL")
 
+from fpdf import FPDF
+import base64
+
+# Crear el PDF
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font("Arial", size=12)
+
+# Título
+pdf.set_font("Arial", 'B', 14)
+pdf.cell(200, 10, txt="Informe de Cálculo de Dosis Médica", ln=True, align="C")
+pdf.set_font("Arial", size=12)
+pdf.ln(10)
+
+# Datos
+pdf.cell(200, 10, txt=f"Peso del paciente: {peso:.2f} kg", ln=True)
+pdf.cell(200, 10, txt=f"Dosis requerida: {dosis_requerida:.2f} mg/kg", ln=True)
+pdf.cell(200, 10, txt=f"Concentración del medicamento: {concentracion:.4f} mg/mL", ln=True)
+pdf.ln(5)
+pdf.cell(200, 10, txt="Fórmula aplicada:", ln=True)
+pdf.cell(200, 10, txt=f"({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.4f}", ln=True)
+pdf.cell(200, 10, txt=f"Resultado: {volumen_a_administrar_ml:.2f} mL", ln=True)
+pdf.ln(10)
+pdf.cell(200, 10, txt="Proyecto desarrollado por Judá - 2025", ln=True)
+
+# Guardar en memoria
+pdf_output = pdf.output(dest='S').encode('latin1')
+b64_pdf = base64.b64encode(pdf_output).decode('utf-8')
+
+href = f'<a href="data:application/pdf;base64,{b64_pdf}" download="dosis_calculada.pdf">Descargar resultado en PDF</a>'
+st.markdown(href, unsafe_allow_html=True)
 st.markdown("---")
 st.caption("Proyecto creado por Judá - 2025")
 st.markdown('</div>', unsafe_allow_html=True)
