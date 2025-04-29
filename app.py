@@ -37,14 +37,39 @@ if st.button("Ingresar a la calculadora"):
 if "mostrar_calculadora" in st.session_state and st.session_state["mostrar_calculadora"]:
     st.header("Calculadora de Dosis")
 
-    peso = st.number_input("Peso del paciente (kg):", min_value=0.0, format="%.2f")
-    dosis_kg = st.number_input("Dosis por kg (mg/kg):", min_value=0.0, format="%.2f")
+import streamlit as st
 
-    if st.button("Calcular dosis total"):
-        dosis_total = peso * dosis_kg
-        st.success(f"Dosis total: **{dosis_total:.2f} mg**")
+# Título principal
+st.title("Calculadora de Dosis Médicas Mejorada")
+
+# Entradas de datos
+peso = st.number_input("Peso del paciente (kg)", min_value=0.0, step=0.1, format="%.2f")
+dosis_requerida = st.number_input("Dosis requerida por kg (mg/kg)", min_value=0.0, step=0.1, format="%.2f")
+concentracion = st.number_input("Concentración del medicamento (mg/mL)", min_value=0.0, step=0.1, format="%.2f")
+
+# Botón para calcular
+if st.button("Calcular dosis"):
+
+    # Validaciones
+    if peso <= 0:
+        st.error("Error: El peso debe ser mayor que 0 kg. Por favor, ingresa un valor válido.")
+    elif dosis_requerida <= 0:
+        st.error("Error: La dosis requerida debe ser mayor que 0 mg/kg.")
+    elif concentracion <= 0:
+        st.error("Error: La concentración debe ser mayor que 0 mg/mL.")
     else:
-        st.warning("Por favor, introduce valores válidos en todos los campos.")
+        # Cálculo
+        dosis_total_mg = peso * dosis_requerida
+        volumen_a_administrar_ml = dosis_total_mg / concentracion
+
+        # Mostrar procedimiento
+        st.success("Cálculo realizado exitosamente:")
+        st.write(f"**Peso ingresado:** {peso:.2f} kg")
+        st.write(f"**Dosis requerida:** {dosis_requerida:.2f} mg/kg")
+        st.write(f"**Concentración:** {concentracion:.2f} mg/mL")
+        st.write("---")
+        st.write(f"**Fórmula aplicada:** ({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.2f}")
+        st.write(f"**Resultado final:** {volumen_a_administrar_ml:.2f} mL")
 
 st.markdown("---")
 st.caption("Proyecto creado por Judá - 2025")
