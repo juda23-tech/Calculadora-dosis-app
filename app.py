@@ -2,6 +2,9 @@
 import streamlit as st
 from PIL import Image
 
+# Inicializar historial si no existe
+if "historial" not in st.session_state:
+    st.session_state.historial = []
 # Configuración de la página
 st.set_page_config(page_title="Calculadora de Dosis Médicas", layout="wide")
 
@@ -134,6 +137,13 @@ with st.expander("Abrir Calculadora de Dosis", expanded=False):
             st.write(f"**Fórmula aplicada:** ({peso:.2f} × {dosis_requerida:.2f}) ÷ {concentracion:.4f}")
             st.write(f"**Resultado final:** {volumen_a_administrar_ml:.2f} mL")
 
+            # Guardar en historial
+st.session_state.historial.append({
+    "Peso (kg)": round(peso, 2),
+    "Dosis (mg/kg)": round(dosis_requerida, 2),
+    "Concentración (mg/mL)": round(concentracion, 2),
+    "Resultado (mL)": round(volumen_a_administrar_ml, 2)
+})
 from fpdf import FPDF
 import base64
 
@@ -168,3 +178,7 @@ st.markdown(href, unsafe_allow_html=True)
 st.markdown("---")
 st.caption("Proyecto creado por Judá - 2025")
 st.markdown('</div>', unsafe_allow_html=True)
+
+if st.session_state.historial:
+    st.markdown("## Historial de cálculos realizados")
+    st.dataframe(st.session_state.historial)
