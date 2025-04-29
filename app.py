@@ -43,7 +43,24 @@ import streamlit as st
 st.title("Calculadora de Dosis Médicas Mejorada")
 
 # Entradas de datos
-peso = st.number_input("Peso del paciente (kg)", min_value=0.0, step=0.1, format="%.2f")
+import streamlit as st
+
+st.title("Calculadora de Dosis Médicas Mejorada")
+
+# Selector de unidad de peso
+unidad_peso = st.radio("Unidad del peso ingresado:", ("Kilogramos (kg)", "Libras (lb)"))
+
+# Entrada de peso
+peso_ingresado = st.number_input("Peso del paciente", min_value=0.0, step=0.1, format="%.2f")
+
+# Conversión automática si elige libras
+if unidad_peso == "Libras (lb)":
+    peso = peso_ingresado * 0.453592
+    st.write(f"Peso convertido a kg: {peso:.2f} kg")
+else:
+    peso = peso_ingresado
+
+# Otras entradas
 dosis_requerida = st.number_input("Dosis requerida por kg (mg/kg)", min_value=0.0, step=0.1, format="%.2f")
 concentracion = st.number_input("Concentración del medicamento (mg/mL)", min_value=0.0, step=0.1, format="%.2f")
 
@@ -52,11 +69,11 @@ if st.button("Calcular dosis"):
 
     # Validaciones
     if peso <= 0:
-        st.error("Error: El peso debe ser mayor que 0 kg. Por favor, ingresa un valor válido.")
+        st.error("Error: El peso debe ser mayor que 0.")
     elif dosis_requerida <= 0:
-        st.error("Error: La dosis requerida debe ser mayor que 0 mg/kg.")
+        st.error("Error: La dosis requerida debe ser mayor que 0.")
     elif concentracion <= 0:
-        st.error("Error: La concentración debe ser mayor que 0 mg/mL.")
+        st.error("Error: La concentración debe ser mayor que 0.")
     else:
         # Cálculo
         dosis_total_mg = peso * dosis_requerida
@@ -64,7 +81,7 @@ if st.button("Calcular dosis"):
 
         # Mostrar procedimiento
         st.success("Cálculo realizado exitosamente:")
-        st.write(f"**Peso ingresado:** {peso:.2f} kg")
+        st.write(f"**Peso utilizado (en kg):** {peso:.2f}")
         st.write(f"**Dosis requerida:** {dosis_requerida:.2f} mg/kg")
         st.write(f"**Concentración:** {concentracion:.2f} mg/mL")
         st.write("---")
