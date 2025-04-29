@@ -1,4 +1,41 @@
 import streamlit as st
+# --- Estilos personalizados ---
+st.markdown("""
+    <style>
+    body {
+        background-color: #f5f5f5;
+    }
+    .main {
+        background-color: #ffffff;
+        padding: 20px 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin: 20px;
+    }
+    h1, h2 {
+        color: #003366;
+    }
+    .stButton button {
+        background-color: #003366;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    .stButton button:hover {
+        background-color: #0059b3;
+    }
+    .stRadio > label {
+        font-size: 18px;
+    }
+    .stNumberInput > label {
+        font-size: 18px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Contenedor principal para dar formato bonito
+st.markdown('<div class="main">', unsafe_allow_html=True)
 from PIL import Image
 
 # Configuración de la página
