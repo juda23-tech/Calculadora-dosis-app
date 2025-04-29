@@ -42,20 +42,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Contenedor principal
 st.markdown('<div class="main">', unsafe_allow_html=True)
 
-# Cargar logotipo
+# Logo
 logo = Image.open("logo_calculadora_dosis.png")
-
-# Layout de bienvenida
 col1, col2 = st.columns([1, 3])
 with col1:
     st.image(logo, width=150)
 with col2:
     st.title("Calculadora de Dosis Médicas")
     st.markdown("""
-    Bienvenido a la **Calculadora de Dosis Médicas**, una herramienta sencilla y precisa para el cálculo de dosis en función del peso corporal del paciente y la dosis por kilogramo.
+    Bienvenido a la **Calculadora de Dosis Médicas**, una herramienta precisa para el cálculo de dosis basado en peso corporal y concentración de medicamentos.
 
     Desarrollado por **Judá** como parte de un proyecto educativo y de impacto social.
     """)
@@ -67,28 +64,58 @@ if st.button("Ingresar a la calculadora"):
 if "mostrar_calculadora" in st.session_state and st.session_state["mostrar_calculadora"]:
     st.header("Calculadora de Dosis")
 
+    # Paso 1: Unidad de peso
     unidad_peso = st.radio("Unidad del peso ingresado:", ("Kilogramos (kg)", "Libras (lb)"))
-
     peso_ingresado = st.number_input("Peso del paciente", min_value=0.0, step=0.1, format="%.2f")
-
     if unidad_peso == "Libras (lb)":
         peso = peso_ingresado * 0.453592
         st.write(f"Peso convertido a kg: {peso:.2f} kg")
     else:
         peso = peso_ingresado
 
+    # Paso 2: Dosis requerida
     dosis_requerida = st.number_input("Dosis requerida por kg (mg/kg)", min_value=0.0, step=0.1, format="%.2f")
 
-    unidad_concentracion = st.radio("Unidad de la concentración del medicamento:", ("mg/mL", "μg/mL"))
+    # Paso 3: Medicamento frecuente
+    st.subheader("Selecciona un medicamento frecuente (opcional)")
+    medicamento = st.selectbox(
+        "Medicamento:",
+        ("Selecciona un medicamento", 
+         "Amoxicilina suspensión 250 mg/5 mL",
+         "Ibuprofeno suspensión 100 mg/5 mL",
+         "Paracetamol suspensión 120 mg/5 mL",
+         "Azitromicina suspensión 200 mg/5 mL",
+         "Claritromicina suspensión 125 mg/5 mL",
+         "Otro")
+    )
 
-    concentracion_ingresada = st.number_input("Concentración del medicamento", min_value=0.0, step=0.1, format="%.2f")
-
-    if unidad_concentracion == "μg/mL":
-        concentracion = concentracion_ingresada / 1000
-        st.write(f"Concentración convertida a mg/mL: {concentracion:.4f} mg/mL")
+    # Concentración según selección
+    if medicamento == "Amoxicilina suspensión 250 mg/5 mL":
+        concentracion = 250 / 5
+        st.info("Concentración establecida automáticamente: 50 mg/mL")
+    elif medicamento == "Ibuprofeno suspensión 100 mg/5 mL":
+        concentracion = 100 / 5
+        st.info("Concentración establecida automáticamente: 20 mg/mL")
+    elif medicamento == "Paracetamol suspensión 120 mg/5 mL":
+        concentracion = 120 / 5
+        st.info("Concentración establecida automáticamente: 24 mg/mL")
+    elif medicamento == "Azitromicina suspensión 200 mg/5 mL":
+        concentracion = 200 / 5
+        st.info("Concentración establecida automáticamente: 40 mg/mL")
+    elif medicamento == "Claritromicina suspensión 125 mg/5 mL":
+        concentracion = 125 / 5
+        st.info("Concentración establecida automáticamente: 25 mg/mL")
     else:
-        concentracion = concentracion_ingresada
+        # Otro medicamento
+        unidad_concentracion = st.radio("Unidad de la concentración del medicamento:", ("mg/mL", "μg/mL"))
+        concentracion_ingresada = st.number_input("Concentración del medicamento", min_value=0.0, step=0.1, format="%.2f")
+        if unidad_concentracion == "μg/mL":
+            concentracion = concentracion_ingresada / 1000
+            st.write(f"Concentración convertida a mg/mL: {concentracion:.4f} mg/mL")
+        else:
+            concentracion = concentracion_ingresada
 
+    # Paso 4: Calcular dosis
     if st.button("Calcular dosis"):
         if peso <= 0:
             st.error("Error: El peso debe ser mayor que 0.")
