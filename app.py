@@ -175,10 +175,11 @@ b64_pdf = base64.b64encode(pdf_output).decode('utf-8')
 
 href = f'<a href="data:application/pdf;base64,{b64_pdf}" download="dosis_calculada.pdf">Descargar resultado en PDF</a>'
 st.markdown(href, unsafe_allow_html=True)
-st.markdown("---")
-st.caption("Proyecto creado por Judá - 2025")
-st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.historial:
     st.markdown("## Historial de cálculos realizados")
     st.dataframe(st.session_state.historial)
+
+st.markdown("---")
+st.caption("Proyecto creado por Judá - 2025")
+st.markdown('</div>', unsafe_allow_html=True)
