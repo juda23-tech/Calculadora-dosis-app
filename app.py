@@ -139,3 +139,4 @@ if st.button("Calcular dosis"):
 
 st.markdown("---")
 st.caption("Proyecto creado por Judá - 2025")
+st.markdown('</div>', unsafe_allow_html=True)
