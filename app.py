@@ -56,7 +56,7 @@ col1, col2 = st.columns([1, 3])
 with col1:
     st.image(logo, width=150)
 with col2:
-    st.title("Calculadora de Dosis Médicas")
+    st.title("💊 Calculadora de Dosis Médicas")
     st.markdown("""
     Bienvenido a la **Calculadora de Dosis Médicas**, una herramienta precisa para el cálculo de dosis basado en peso corporal y concentración de medicamentos.
 
